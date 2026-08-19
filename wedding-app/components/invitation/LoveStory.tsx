@@ -1,21 +1,19 @@
 'use client';
 
 // components/invitation/LoveStory.tsx
-// Timeline kisah cinta — scroll-triggered dengan Motion
+// Timeline kisah cinta — theme-aware.
+// Jawa Merah: gold timeline line, maroon dot.
+// Minimalist: gray timeline line, minimal dot.
 
 import { motion } from 'motion/react';
 import { SectionHeading } from '@/components/ui/SectionHeading';
+import { useTheme } from '@/contexts/ThemeContext';
 import type { InvitationData, StoryItem } from '@/types/invitation';
 
-const PLACEHOLDER_GRADIENTS = [
-  'linear-gradient(135deg, #5C0A0A 0%, #C9A84C 100%)',
-  'linear-gradient(135deg, #7A5714 0%, #8B1A1A 100%)',
-  'linear-gradient(135deg, #3D2B1F 0%, #C9A84C 100%)',
-  'linear-gradient(135deg, #8B1A1A 0%, #4A0808 100%)',
-];
-
 function TimelineItem({ item, index }: { item: StoryItem; index: number }) {
-  const isEven = index % 2 === 0;
+  const theme = useTheme();
+  const { colors, timelineGradients, decoration, animation } = theme;
+  const d = (base: number) => base * animation.durationMultiplier;
 
   return (
     <motion.li
@@ -23,34 +21,54 @@ function TimelineItem({ item, index }: { item: StoryItem; index: number }) {
       initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: d(0.7), delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* Titik timeline */}
+      {/* Timeline dot */}
       <motion.div
-        className="absolute left-[10px] top-1.5 w-3.5 h-3.5 rounded-full border-2 border-gold z-10"
-        style={{ background: '#8B1A1A' }}
-        whileInView={{ scale: [1, 1.3, 1.1], backgroundColor: ['#8B1A1A', '#C9A84C', '#C9A84C'] }}
+        className="absolute left-[10px] top-1.5 w-3.5 h-3.5 rounded-full border-2 z-10"
+        style={{
+          borderColor: colors.accent,
+          background: decoration.enabled ? colors.primary : colors.bgAlt,
+        }}
+        whileInView={
+          decoration.enabled
+            ? { scale: [1, 1.3, 1.1], backgroundColor: [colors.primary, colors.accent, colors.accent] }
+            : { scale: [1, 1.2, 1] }
+        }
         viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.3 }}
+        transition={{ duration: d(0.6), delay: 0.3 }}
       />
 
-      <p className="text-[0.65rem] font-medium tracking-[0.2em] uppercase text-gold mb-1">
+      {/* Year */}
+      <p
+        className="text-[0.65rem] font-medium tracking-[0.2em] uppercase mb-1"
+        style={{ color: colors.accent }}
+      >
         {item.year}
       </p>
-      <h3 className="font-heading font-medium text-maroon text-[1.3rem] mb-2">
+
+      {/* Title */}
+      <h3
+        className="font-heading font-medium mb-2"
+        style={{ fontSize: '1.3rem', color: colors.primary }}
+      >
         {item.title}
       </h3>
 
-      {/* Foto */}
+      {/* Photo */}
       <motion.div
         className="w-full h-48 rounded-xl overflow-hidden relative mb-3"
-        style={{ background: PLACEHOLDER_GRADIENTS[index % 4] }}
+        style={{ background: timelineGradients[index % timelineGradients.length] }}
         initial={{ opacity: 0, scale: 0.96 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
+        transition={{ duration: d(0.7), delay: 0.2 }}
       >
-        <div className="absolute inset-0 flex items-center justify-center font-heading text-2xl italic opacity-40 text-ivory" aria-hidden="true">
+        <div
+          className="absolute inset-0 flex items-center justify-center font-heading text-2xl italic opacity-40"
+          style={{ color: decoration.enabled ? colors.accentPale : colors.textLight }}
+          aria-hidden="true"
+        >
           {item.year}
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -59,11 +77,13 @@ function TimelineItem({ item, index }: { item: StoryItem; index: number }) {
           alt={`${item.title} - ${item.year}`}
           className="absolute inset-0 w-full h-full object-cover z-10"
           loading="lazy"
-          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = 'none';
+          }}
         />
       </motion.div>
 
-      <p className="text-[0.82rem] font-light text-text-medium leading-relaxed">
+      <p className="text-[0.82rem] font-light leading-relaxed" style={{ color: colors.textMuted }}>
         {item.description}
       </p>
     </motion.li>
@@ -72,18 +92,20 @@ function TimelineItem({ item, index }: { item: StoryItem; index: number }) {
 
 export function LoveStory({ data }: { data: InvitationData }) {
   const { loveStory } = data;
+  const { backgrounds } = useTheme();
 
   return (
     <section
       id="story"
-      className="bg-ivory py-20 px-6"
+      className="py-20 px-6"
+      style={{ background: backgrounds.loveStory }}
       aria-label="Kisah cinta"
     >
       <div className="max-w-2xl mx-auto">
         <SectionHeading eyebrow="Our Story" title="Perjalanan Cinta Kami" />
 
         <div className="relative">
-          {/* Garis vertikal timeline */}
+          {/* Vertical timeline line */}
           <div
             className="timeline-line absolute left-[17px] top-0 bottom-0 w-px"
             aria-hidden="true"

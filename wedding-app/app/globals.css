@@ -196,3 +196,139 @@ body.overflow-hidden {
   background: #C9A84C;
   box-shadow: inset 0 0 0 3px #8B1A1A;
 }
+
+/* =============================================================
+   MINIMALIST THEME OVERRIDES
+   [data-theme="minimalist"] scopes all overrides to that wrapper.
+   Jawa Merah styles above remain completely untouched.
+   ============================================================= */
+
+/* Font: Inter replaces Poppins for body text */
+[data-theme="minimalist"] {
+  font-family: var(--font-inter), 'Helvetica Neue', sans-serif;
+}
+
+/* Selection color */
+[data-theme="jawa-merah"] ::selection {
+  background: #C9A84C;
+  color: #4A0808;
+}
+[data-theme="minimalist"] ::selection {
+  background: rgba(26,26,26,0.12);
+  color: #1A1A1A;
+}
+
+/* Swiper — pagination dots */
+[data-theme="minimalist"] .gallery-swiper .swiper-pagination-bullet {
+  background: rgba(160, 160, 160, 0.35) !important;
+}
+[data-theme="minimalist"] .gallery-swiper .swiper-pagination-bullet-active {
+  background: #A0A0A0 !important;
+  width: 20px !important;
+  border-radius: 3px !important;
+}
+
+/* Swiper — navigation arrows */
+[data-theme="minimalist"] .gallery-swiper .swiper-button-prev,
+[data-theme="minimalist"] .gallery-swiper .swiper-button-next {
+  color: #A0A0A0 !important;
+}
+
+/* Timeline vertical line */
+[data-theme="minimalist"] .timeline-line {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(160,160,160,0.35) 10%,
+    rgba(160,160,160,0.35) 90%,
+    transparent 100%
+  );
+  opacity: 1;
+}
+
+/* Radio button (RSVP form on dark bg) */
+[data-theme="minimalist"] .radio-input:checked + .radio-dot {
+  border-color: #A0A0A0;
+  background: #A0A0A0;
+  box-shadow: inset 0 0 0 3px #1A1A1A;
+}
+
+/* Scrollbar */
+[data-theme="minimalist"] ::-webkit-scrollbar-track {
+  background: #111111;
+}
+[data-theme="minimalist"] ::-webkit-scrollbar-thumb {
+  background: #A0A0A0;
+}
+
+/* Focus ring */
+[data-theme="minimalist"] :focus-visible {
+  outline-color: #A0A0A0;
+}
+
+/* =============================================================
+   FLORAL ELEGANT THEME OVERRIDES
+   [data-theme="floral-elegant"] scopes all overrides.
+   Jawa Merah and Minimalist styles above remain untouched.
+   ============================================================= */
+
+/* Font: Inter for body text */
+[data-theme="floral-elegant"] {
+  font-family: var(--font-inter), 'Helvetica Neue', sans-serif;
+}
+
+/* Selection color */
+[data-theme="floral-elegant"] ::selection {
+  background: rgba(201,166,172,0.2);
+  color: #2D2829;
+}
+
+/* Swiper — pagination dots: soft rose */
+[data-theme="floral-elegant"] .gallery-swiper .swiper-pagination-bullet {
+  background: rgba(201, 166, 172, 0.4) !important;
+}
+[data-theme="floral-elegant"] .gallery-swiper .swiper-pagination-bullet-active {
+  background: #C9A6AC !important;
+  width: 20px !important;
+  border-radius: 3px !important;
+}
+
+/* Swiper — navigation arrows */
+[data-theme="floral-elegant"] .gallery-swiper .swiper-button-prev,
+[data-theme="floral-elegant"] .gallery-swiper .swiper-button-next {
+  color: #C9A6AC !important;
+}
+
+/* Timeline vertical line — warm rose */
+[data-theme="floral-elegant"] .timeline-line {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(201,166,172,0.5) 10%,
+    rgba(201,166,172,0.5) 90%,
+    transparent 100%
+  );
+  opacity: 1;
+}
+
+/* Radio button (RSVP on dark bg) */
+[data-theme="floral-elegant"] .radio-input:checked + .radio-dot {
+  border-color: #C9A6AC;
+  background: #C9A6AC;
+  box-shadow: inset 0 0 0 3px #2D2829;
+}
+
+/* Scrollbar — warm tones */
+[data-theme="floral-elegant"] ::-webkit-scrollbar-track {
+  background: #2D2829;
+}
+[data-theme="floral-elegant"] ::-webkit-scrollbar-thumb {
+  background: #C9A6AC;
+}
+
+/* Focus ring */
+[data-theme="floral-elegant"] :focus-visible {
+  outline-color: #C9A6AC;
+}
+
+

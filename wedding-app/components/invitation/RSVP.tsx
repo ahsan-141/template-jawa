@@ -1,12 +1,14 @@
 'use client';
 
 // components/invitation/RSVP.tsx
-// Form konfirmasi kehadiran — frontend only, mudah dihubungkan ke API
+// Form konfirmasi kehadiran — theme-aware.
+// Background gelap di kedua tema (maroon / dark charcoal).
 
 import { useState, useCallback } from 'react';
 import { Check } from 'lucide-react';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Reveal } from '@/components/ui/Reveal';
+import { useTheme } from '@/contexts/ThemeContext';
 import type { RSVPFormData } from '@/types/invitation';
 
 const initialForm: RSVPFormData = {
@@ -20,6 +22,8 @@ export function RSVP() {
   const [form, setForm] = useState<RSVPFormData>(initialForm);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const theme = useTheme();
+  const { backgrounds, colors, decoration } = theme;
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -33,7 +37,6 @@ export function RSVP() {
     (e: React.FormEvent) => {
       e.preventDefault();
       setError('');
-
       if (!form.name.trim()) {
         setError('Mohon isi nama Anda.');
         return;
@@ -42,34 +45,42 @@ export function RSVP() {
         setError('Mohon pilih konfirmasi kehadiran.');
         return;
       }
-
       // Data siap dikirim ke API — uncomment saat backend tersedia:
       // await fetch('/api/rsvp', { method: 'POST', body: JSON.stringify(form) });
       console.log('RSVP Data:', { ...form, timestamp: new Date().toISOString() });
-
       setSubmitted(true);
     },
     [form]
   );
 
   const inputClass =
-    'w-full px-4 py-3 rounded-xl text-[0.875rem] font-light outline-none transition-colors duration-200 placeholder:opacity-35 focus:border-gold border bg-white/[0.08] text-gold-pale';
-  const inputStyle = { borderColor: 'rgba(201,168,76,0.25)' };
+    'w-full px-4 py-3 rounded-xl text-[0.875rem] font-light outline-none transition-colors duration-200 placeholder:opacity-35 border';
+  const inputStyle = {
+    borderColor: colors.inputBorder,
+    background: colors.cardBgOnDark,
+    color: colors.inputText,
+  };
 
   return (
     <section
       id="rsvp"
       className="relative py-20 px-6 overflow-hidden"
-      style={{ background: 'linear-gradient(160deg, #4A0808 0%, #8B1A1A 100%)' }}
+      style={{ background: backgrounds.rsvp }}
       aria-label="Konfirmasi kehadiran RSVP"
     >
-      <div className="quote-pattern absolute inset-0 pointer-events-none" aria-hidden="true" />
+      {/* Pattern overlay — Jawa Merah only */}
+      {decoration.enabled && (
+        <div className="quote-pattern absolute inset-0 pointer-events-none" aria-hidden="true" />
+      )}
 
       <div className="relative z-10 max-w-lg mx-auto">
         <SectionHeading eyebrow="Konfirmasi" title="Konfirmasi Kehadiran" light />
 
         <Reveal delay={0.1}>
-          <p className="text-[0.85rem] font-light text-center mb-8 -mt-4 leading-relaxed" style={{ color: 'rgba(245,230,184,0.7)' }}>
+          <p
+            className="text-[0.85rem] font-light text-center mb-8 -mt-4 leading-relaxed"
+            style={{ color: colors.textOnDark, opacity: 0.7 }}
+          >
             Mohon konfirmasi kehadiran Anda sebelum tanggal 20 September 2026.
           </p>
         </Reveal>
@@ -79,13 +90,25 @@ export function RSVP() {
           <Reveal>
             <div className="text-center py-12" role="alert" aria-live="assertive">
               <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center border-2 border-gold">
-                  <Check size={32} className="text-gold" />
+                <div
+                  className="w-16 h-16 rounded-full flex items-center justify-center border-2"
+                  style={{ borderColor: colors.accent }}
+                >
+                  <Check size={32} style={{ color: colors.accent }} />
                 </div>
               </div>
-              <h3 className="font-heading text-gold-pale text-2xl font-light mb-3">Terima Kasih!</h3>
-              <p className="text-[0.85rem] font-light leading-relaxed" style={{ color: 'rgba(245,230,184,0.7)' }}>
-                Terima kasih atas konfirmasi Anda. Kami sangat menantikan kehadiran Anda di hari bahagia kami.
+              <h3
+                className="font-heading text-2xl font-light mb-3"
+                style={{ color: colors.textOnDark }}
+              >
+                Terima Kasih!
+              </h3>
+              <p
+                className="text-[0.85rem] font-light leading-relaxed"
+                style={{ color: colors.textOnDark, opacity: 0.7 }}
+              >
+                Terima kasih atas konfirmasi Anda. Kami sangat menantikan
+                kehadiran Anda di hari bahagia kami.
               </p>
             </div>
           </Reveal>
@@ -95,12 +118,19 @@ export function RSVP() {
               onSubmit={handleSubmit}
               noValidate
               className="rounded-2xl p-6 backdrop-blur-sm space-y-5 border"
-              style={{ background: 'rgba(255,251,245,0.06)', borderColor: 'rgba(201,168,76,0.2)' }}
+              style={{
+                background: colors.cardBgOnDark,
+                borderColor: colors.borderOnDark,
+              }}
               aria-label="Form konfirmasi kehadiran"
             >
               {/* Nama */}
               <div>
-                <label htmlFor="rsvp-name" className="block text-[0.72rem] font-medium tracking-[0.1em] uppercase mb-2 text-gold-light">
+                <label
+                  htmlFor="rsvp-name"
+                  className="block text-[0.72rem] font-medium tracking-[0.1em] uppercase mb-2"
+                  style={{ color: colors.accentOnDark }}
+                >
                   Nama Lengkap
                 </label>
                 <input
@@ -113,18 +143,25 @@ export function RSVP() {
                   required
                   autoComplete="name"
                   className={inputClass}
-                  style={inputStyle}
+                  style={{ ...inputStyle, borderColor: `${colors.inputBorder}` }}
                 />
               </div>
 
               {/* Kehadiran */}
               <fieldset>
-                <legend className="block text-[0.72rem] font-medium tracking-[0.1em] uppercase mb-2 text-gold-light">
+                <legend
+                  className="block text-[0.72rem] font-medium tracking-[0.1em] uppercase mb-2"
+                  style={{ color: colors.accentOnDark }}
+                >
                   Kehadiran
                 </legend>
                 <div className="flex gap-5 flex-wrap">
                   {(['hadir', 'tidak-hadir'] as const).map((val) => (
-                    <label key={val} className="flex items-center gap-2.5 cursor-pointer text-[0.875rem] font-light text-gold-pale">
+                    <label
+                      key={val}
+                      className="flex items-center gap-2.5 cursor-pointer text-[0.875rem] font-light"
+                      style={{ color: colors.textOnDark }}
+                    >
                       <input
                         type="radio"
                         name="attendance"
@@ -136,7 +173,16 @@ export function RSVP() {
                       />
                       <span
                         className="radio-dot w-4.5 h-4.5 rounded-full border flex items-center justify-center transition-all duration-200"
-                        style={{ borderColor: form.attendance === val ? '#C9A84C' : 'rgba(201,168,76,0.4)', background: form.attendance === val ? '#C9A84C' : 'transparent', boxShadow: form.attendance === val ? 'inset 0 0 0 3px #8B1A1A' : 'none' }}
+                        style={{
+                          borderColor:
+                            form.attendance === val ? colors.accent : colors.borderOnDark,
+                          background:
+                            form.attendance === val ? colors.accent : 'transparent',
+                          boxShadow:
+                            form.attendance === val
+                              ? `inset 0 0 0 3px ${backgrounds.rsvp}`
+                              : 'none',
+                        }}
                         aria-hidden="true"
                       />
                       {val === 'hadir' ? 'Hadir' : 'Tidak Hadir'}
@@ -145,10 +191,14 @@ export function RSVP() {
                 </div>
               </fieldset>
 
-              {/* Jumlah tamu — tampil jika hadir */}
+              {/* Jumlah tamu */}
               {form.attendance === 'hadir' && (
                 <div>
-                  <label htmlFor="rsvp-guests" className="block text-[0.72rem] font-medium tracking-[0.1em] uppercase mb-2 text-gold-light">
+                  <label
+                    htmlFor="rsvp-guests"
+                    className="block text-[0.72rem] font-medium tracking-[0.1em] uppercase mb-2"
+                    style={{ color: colors.accentOnDark }}
+                  >
                     Jumlah Tamu
                   </label>
                   <input
@@ -163,13 +213,23 @@ export function RSVP() {
                     style={inputStyle}
                     aria-describedby="guest-hint"
                   />
-                  <p id="guest-hint" className="text-[0.7rem] mt-1 opacity-50 text-gold-pale">Termasuk diri Anda</p>
+                  <p
+                    id="guest-hint"
+                    className="text-[0.7rem] mt-1 opacity-50"
+                    style={{ color: colors.textOnDark }}
+                  >
+                    Termasuk diri Anda
+                  </p>
                 </div>
               )}
 
               {/* Ucapan */}
               <div>
-                <label htmlFor="rsvp-message" className="block text-[0.72rem] font-medium tracking-[0.1em] uppercase mb-2 text-gold-light">
+                <label
+                  htmlFor="rsvp-message"
+                  className="block text-[0.72rem] font-medium tracking-[0.1em] uppercase mb-2"
+                  style={{ color: colors.accentOnDark }}
+                >
                   Ucapan &amp; Doa
                 </label>
                 <textarea
@@ -186,14 +246,21 @@ export function RSVP() {
 
               {/* Error */}
               {error && (
-                <p className="text-[0.78rem] text-red-300 font-light" role="alert">{error}</p>
+                <p className="text-[0.78rem] text-red-300 font-light" role="alert">
+                  {error}
+                </p>
               )}
 
               {/* Submit */}
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-full text-[0.8rem] font-medium tracking-wide text-gold-light shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90"
-                style={{ background: 'linear-gradient(135deg, #8B1A1A 0%, #4A0808 100%)' }}
+                className="w-full py-3.5 rounded-full text-[0.8rem] font-medium tracking-wide shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90"
+                style={{
+                  background: decoration.enabled
+                    ? `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%)`
+                    : colors.primary,
+                  color: decoration.enabled ? colors.accentLight : colors.bgAlt,
+                }}
               >
                 Kirim Konfirmasi
               </button>

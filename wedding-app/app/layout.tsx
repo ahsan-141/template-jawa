@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Cormorant_Garamond, Poppins } from 'next/font/google';
+import { Cormorant_Garamond, Poppins, Inter } from 'next/font/google';
 import './globals.css';
 
 // ── Font Setup ────────────────────────────────────────────
@@ -13,6 +13,14 @@ const cormorant = Cormorant_Garamond({
 
 const poppins = Poppins({
   variable: '--font-poppins',
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  display: 'swap',
+});
+
+// Inter — body font untuk Minimalist theme
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
   weight: ['300', '400', '500'],
   display: 'swap',
@@ -38,7 +46,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${cormorant.variable} ${poppins.variable}`}>
+    <html lang="id" className={`${cormorant.variable} ${poppins.variable} ${inter.variable}`}>
       <body className="antialiased">{children}</body>
     </html>
   );

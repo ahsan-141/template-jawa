@@ -97,3 +97,17 @@ export type RSVPFormData = {
   guests: number;
   message: string;
 };
+
+// ── Invitation Record ──────────────────────────────────────
+import type { ThemeCustomization } from './customization';
+
+export type InvitationRecord = {
+  id: string;
+  slug: string;
+  themeId: string;
+  customization: ThemeCustomization;
+  data: InvitationData;
+  status: 'draft' | 'published';
+  createdAt: string;
+};
+
